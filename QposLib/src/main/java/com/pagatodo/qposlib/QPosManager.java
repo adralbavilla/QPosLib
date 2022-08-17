@@ -20,6 +20,7 @@ import com.pagatodo.qposlib.dongleconnect.DongleConnect;
 import com.pagatodo.qposlib.dongleconnect.DongleListener;
 import com.pagatodo.qposlib.dongleconnect.TransactionAmountData;
 import com.pagatodo.qposlib.emv.EmvTags;
+import com.pagatodo.qposlib.enums.UserInterfaceMessage;
 import com.pagatodo.qposlib.pos.ICCDecodeData;
 import com.pagatodo.qposlib.pos.POSConnectionState;
 import com.pagatodo.qposlib.pos.PosResult;
@@ -859,6 +860,21 @@ public class QPosManager<T extends DspreadDevicePOS> extends AbstractDongle impl
     @Override
     public void onRequestDisplay(final QPOSService.Display displayMsg) {
         logFlow("onRequestDisplay() called with: displayMsg = [" + displayMsg + "]");
+
+        if (displayMsg == QPOSService.Display.PLEASE_WAIT) {
+            dongleListener.onShowMessage(UserInterfaceMessage.READING_CARD, false);
+        } else if (displayMsg == QPOSService.Display.PROCESSING) {
+            dongleListener.onShowMessage(UserInterfaceMessage.PROCESSING, false);
+        } else if (displayMsg == QPOSService.Display.INPUT_PIN_ING
+                || displayMsg == QPOSService.Display.INPUT_OFFLINE_PIN_ONLY) {
+            dongleListener.onShowMessage(UserInterfaceMessage.ENTER_PIN, true);
+        } else if (displayMsg == QPOSService.Display.INPUT_LAST_OFFLINE_PIN) {
+            dongleListener.onShowMessage(UserInterfaceMessage.LAST_PIN, true);
+        } else if (displayMsg == QPOSService.Display.REMOVE_CARD) {
+            dongleListener.onShowMessage(UserInterfaceMessage.REMOVE_CARD, true);
+        } else if (displayMsg == QPOSService.Display.TRANSACTION_TERMINATED) {
+            dongleListener.onShowMessage(UserInterfaceMessage.TRX_ABORTED, false);
+        }
     }
 
     @Override
