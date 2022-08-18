@@ -456,6 +456,8 @@ public class QPosManager<T extends DspreadDevicePOS> extends AbstractDongle impl
     @Override
     public void onRequestWaitingUser() {
         logFlow("onRequestWaitingUser() called");
+        dongleListener.onShowMessage(UserInterfaceMessage.PRESENT_CARD, true);
+
     }
 
     @Override
