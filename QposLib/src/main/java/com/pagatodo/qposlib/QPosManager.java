@@ -218,11 +218,11 @@ public class QPosManager<T extends DspreadDevicePOS> extends AbstractDongle impl
             logFlow("onRequestSetAmount(): amount = [" + amount + "], cashback = [" + cashback + "], currencyCode = [" + currencyCode + "], transactionType = [" + transactionType + "]");
             mPosService.setAmount(setDecimalesAmount(amount), setDecimalesAmount(cashback), currencyCode, transactionType);
 
-            if (dongleListener.checkDoTrade()) {
+           /* if (dongleListener.checkDoTrade()) {
                 mPosService.doTrade(10, 30);
             } else {
                 mPosService.doCheckCard(30, 10);
-            }
+            }*/
         }
     }
 
