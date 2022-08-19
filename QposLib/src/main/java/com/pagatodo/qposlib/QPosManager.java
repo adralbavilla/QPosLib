@@ -687,7 +687,7 @@ public class QPosManager<T extends DspreadDevicePOS> extends AbstractDongle impl
         QPOSService.TransactionType transactionType = transactionAmountData.getTransactionType();
 
         logFlow("onRequestSetAmount(): amount = [" + amount + "], cashback = [" + cashback + "], currencyCode = [" + currencyCode + "], transactionType = [" + transactionType + "]");
-        mPosService.setAmount(setDecimalesAmount(amount), setDecimalesAmount(cashback), currencyCode, transactionType, false);
+        mPosService.setAmount(setDecimalesAmount(amount), setDecimalesAmount(cashback), currencyCode, transactionType, true);
     }
 
     @Override
@@ -925,6 +925,21 @@ public class QPosManager<T extends DspreadDevicePOS> extends AbstractDongle impl
     }
 
     @Override
+    public void onReturnPowerOnFelicaResult(String s, Hashtable<String, String> hashtable) {
+
+    }
+
+    @Override
+    public void onReturnPowerOffFelicaResult(String s) {
+
+    }
+
+    @Override
+    public void onReturnSendApduFelicaResult(String s, String s1, String s2) {
+
+    }
+
+    @Override
     public void onReturnSetSleepTimeResult(final boolean isSuccess) {
         logFlow("onReturnSetSleepTimeResult() called with: isSuccess = [" + isSuccess + "]");
     }
@@ -959,6 +974,11 @@ public class QPosManager<T extends DspreadDevicePOS> extends AbstractDongle impl
         logFlow("onReturnCustomConfigResult() called with: isSuccess = [" + isSuccess + "], result = [" + result + "]");
         onReturnCustomConfigConsumer.accept(isSuccess);
         onReturnCustomConfigConsumer = null;
+    }
+
+    @Override
+    public void onReturnDoInputCustomStr(boolean b, String s, String s1) {
+
     }
 
     @Override
@@ -1130,6 +1150,11 @@ public class QPosManager<T extends DspreadDevicePOS> extends AbstractDongle impl
     }
 
     @Override
+    public void onReturnMPUCardInfo(Hashtable<String, String> hashtable) {
+
+    }
+
+    @Override
     public void onReturnPowerOnNFCResult(final boolean result, final String ksn, final String atr, final int atrLen) {
         logFlow("onReturnPowerOnNFCResult() called with: result = [" + result + "], ksn = [" + ksn + "], atr = [" + atr + "], atrLen = [" + atrLen + "]");
     }
@@ -1150,8 +1175,18 @@ public class QPosManager<T extends DspreadDevicePOS> extends AbstractDongle impl
     }
 
     @Override
+    public void onReadGasCardResult(boolean b, String s) {
+
+    }
+
+    @Override
     public void onWriteBusinessCardResult(boolean b) {
         logFlow("onWriteBusinessCardResult() called with: b = [" + b + "]");
+    }
+
+    @Override
+    public void onWriteGasCardResult(boolean b) {
+
     }
 
     @Override
@@ -1180,8 +1215,8 @@ public class QPosManager<T extends DspreadDevicePOS> extends AbstractDongle impl
     }
 
     @Override
-    public void onEncryptData(final String b) {
-        logFlow("onEncryptData() called with: b = [" + b + "]");
+    public void onEncryptData(Hashtable<String, String> hashtable) {
+
     }
 
     @Override
@@ -1240,8 +1275,8 @@ public class QPosManager<T extends DspreadDevicePOS> extends AbstractDongle impl
     }
 
     @Override
-    public void onSetPosBlePinCode(boolean b) {
-        logFlow("onSetPosBlePinCode() called with: b = [" + b + "]");
+    public void onSetPosBluConfig(boolean b) {
+
     }
 
     @Override
@@ -1288,6 +1323,21 @@ public class QPosManager<T extends DspreadDevicePOS> extends AbstractDongle impl
     @Override
     public void onRequestNFCBatchData(QPOSService.TransactionResult transactionResult, String tlv) {
         logFlow("onRequestNFCBatchData() called with: transactionResult = [" + transactionResult + "], tlv = [" + tlv + "]");
+    }
+
+    @Override
+    public void onReturnupdateKeyByTR_31Result(boolean b) {
+
+    }
+
+    @Override
+    public void onRequestGenerateTransportKey(Hashtable hashtable) {
+
+    }
+
+    @Override
+    public void onReturnAnalyseDigEnvelop(String s) {
+
     }
 
     private String setDecimalesAmount(final String monto) {
