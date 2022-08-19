@@ -457,7 +457,6 @@ public class QPosManager<T extends DspreadDevicePOS> extends AbstractDongle impl
     public void onRequestWaitingUser() {
         logFlow("onRequestWaitingUser() called");
         dongleListener.onShowMessage(UserInterfaceMessage.PRESENT_CARD, true);
-
     }
 
     @Override
@@ -688,7 +687,7 @@ public class QPosManager<T extends DspreadDevicePOS> extends AbstractDongle impl
         QPOSService.TransactionType transactionType = transactionAmountData.getTransactionType();
 
         logFlow("onRequestSetAmount(): amount = [" + amount + "], cashback = [" + cashback + "], currencyCode = [" + currencyCode + "], transactionType = [" + transactionType + "]");
-        mPosService.setAmount(setDecimalesAmount(amount), setDecimalesAmount(cashback), currencyCode, transactionType, true);
+        //mPosService.setAmount(setDecimalesAmount(amount), setDecimalesAmount(cashback), currencyCode, transactionType, true);
     }
 
     @Override
