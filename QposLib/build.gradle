@@ -1,30 +1,63 @@
-apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-group = 'pagatodo.test'
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        // Repositorios cacheados en nexus //
+        maven {
+            url "https://nexus.yaganaste.com/repository/maven-central/"
+        }
+        maven {
+            url "https://nexus.yaganaste.com/repository/jcenter/"
+        }
+        maven {
+            url "https://nexus.yaganaste.com/repository/gradle_plugins/"
+        }
+        // Repositorios sin cachear
+
+    }
+    dependencies {// Evita que se use una versiÃ³n demasiado nueva de jgit, que no soporta java 8
+        constraints {
+            classpath("org.eclipse.jgit:org.eclipse.jgit") {
+                version {
+                    strictly '[5.13, 6.0['
+                }
+            }
+            classpath "org.ajoberstar.grgit:grgit-gradle:4.1.1"
+        }
+    }
+}
+
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'maven-publish'
+    id 'org.ajoberstar.grgit' version '4.1.1'
+}
+
+def getSvnRevision(){
+    return grgit.log(includes:['HEAD']).size()
+}
+
+def svnRev = "4.4.0-beta"+ getSvnRevision()
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 31
+    useLibrary 'org.apache.http.legacy'
 
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 31
         versionCode 2
-        versionName "1.1"
+        versionName svnRev
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-
     }
 
     buildTypes {
-        debug {
-            debuggable true
-        }
-
-        qa {
-            minifyEnabled false
-            debuggable true
-        }
+        version svnRev
 
         release {
             minifyEnabled false
@@ -32,6 +65,29 @@ android {
         }
     }
 
+
+
+    libraryVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFileName = output.outputFileName
+            if (outputFileName != null && outputFileName.endsWith('.aar')) {
+                def fileName = "${archivesBaseName}-${version}.aar"
+                output.outputFileName = new File(fileName)
+            }
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+
+    sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+    buildToolsVersion '30.0.3'
 }
 
 dependencies {
@@ -46,4 +102,32 @@ dependencies {
     implementation 'com.sunmi:sunmiui:1.1.22'
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            /*release(MavenPublication) {
+                from components.release
+                groupId = 'com.pagatodo'
+                artifactId = 'sigmaLib'
+                version = '1.2.59'
+            }*/
+            debug(MavenPublication) {
+                from components.debug
+                groupId = 'com.pagatodo.android'
+                artifactId = 'QPOSLib'
+                version = svnRev
+            }
+        }
+        repositories {
+            maven {
+                url = "$mavenInternalUrl"
+                credentials {
+                    username = "$mavenUser"
+                    password = "$mavenPassword"
+                }
+            }
+        }
+    }
 }
